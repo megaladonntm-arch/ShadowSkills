@@ -1,0 +1,5 @@
+is_premium: bool|None  = False
+    created_at: datetime|None = None
+    updated_at: datetime|None = None
+    user_trust_level: int|None = 1
+#make this into 1 months that should reall work
