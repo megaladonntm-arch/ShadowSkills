@@ -2,6 +2,7 @@ import httpx
 from datetime import datetime
 
 class CommitModel:
+
     def __init__(self, repo_owner: str, repo_name: str, commit_sha: str):
         self.repo_owner = repo_owner
         self.repo_name = repo_name
@@ -106,3 +107,19 @@ class CommitModel:
         A full implementation would require fetching all tags and finding the match.
         """
         return []
+    
+
+
+
+
+class AdminCommitmarkForUser:
+    def __init__(self, repo_owner: str, repo_name: str, commit_sha: str, admin_user: str, mark: str, reason: str):
+        self.commit_model = CommitModel(repo_owner, repo_name, commit_sha)
+        self.admin_user = admin_user
+        self.mark = mark
+        self.reason = reason
+
+    def record_mark(self):
+        # Placeholder for recording the mark in a database or log
+        print(f"Admin {self.admin_user} marked commit {self.commit_model.commit_sha} with {self.mark} for reason: {self.reason}")
+        

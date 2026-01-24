@@ -1,6 +1,7 @@
 
 from commit import CommitModel
 from skill_scorer import ScoreSkillsForProject
+from commit import AdminCommitmarkForUser
 
 from datetime import timedelta
 
@@ -103,13 +104,39 @@ class SkillMarketValueAnalyzer:
 
     def analyze_skill_market_value(self):
         return self.skill_scorer.get_skill_market_value()
-    
+class AdminCommitmarkForUser:
+    def __init__(self, repo_owner: str, repo_name: str, commit_sha: str, admin_user: str):
+        self.commit_mark_model = AdminCommitmarkForUser(repo_owner, repo_name, commit_sha, admin_user)
 
-
-
-
-
-
+    def record_mark(self, mark: str, comments: str):
+        self.commit_mark_model.record_mark(mark, comments)
 
 #example usage:
+analyzer = CommitAnalyzer("megaladonntm-arch", "ShadowSkills", "d0e7d528d11e5270da48ad837031a69381049b34")
+
+report = analyzer.get_detailed_report()
+print(report)
+summary_dict = analyzer.get_commit_summary_dict()
+print(summary_dict)
+time_difference_days = analyzer.get_time_between_commits_days()
+print(f"Time between commits: {time_difference_days} days")
+is_merge = analyzer.is_merge_commit()
+print(f"Is merge commit: {is_merge}")
+
+changed_files = analyzer.get_changed_files()
+print(f"Changed files: {changed_files}")
+commit_tags = analyzer.get_commit_tags()
+print(f"Commit tags: {commit_tags}")
+
+commit_branch = analyzer.get_commit_branch()
+print(f"Commit branch: {commit_branch}")
+skill_analyzer = SkillMarketValueAnalyzer("megaladonntm-arch", "ShadowSkills", "d0e7d528d11e5270da48ad837031a69381049b34")
+skill_market_value = skill_analyzer.analyze_skill_market_value()
+print(f"Skill Market Value: {skill_market_value}")
+summary = analyzer.given_summary()
+print(summary)
+grade = analyzer.grade_commit()
+print(grade)
+admin_mark_user = AdminCommitmarkForUser("megaladonntm-arch", "ShadowSkills", "d0e7d528d11e5270da48ad837031a69381049b34", "admin_user")
+admin_mark_user.record_mark("Approved", "Code meets all quality standards.")
 
