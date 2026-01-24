@@ -1,5 +1,6 @@
 
-from app.data_base.models.commit import CommitModel
+from commit import CommitModel
+from skill_scorer import ScoreSkillsForProject
 
 from datetime import timedelta
 
@@ -96,13 +97,19 @@ class CommitAnalyzer:
     def get_commit_branch(self):
         return self.commit_model.get_branch_for_commit()
 
+class SkillMarketValueAnalyzer:
+    def __init__(self, repo_owner: str, repo_name: str, commit_sha: str):
+        self.skill_scorer = ScoreSkillsForProject(repo_owner, repo_name, commit_sha)
+
+    def analyze_skill_market_value(self):
+        return self.skill_scorer.get_skill_market_value()
+    
+
+
+
+
+
+
+
 #example usage:
-analyzer = CommitAnalyzer("megaladonntm-arch", "ShadowSkills", "d0e7d528d11e5270da48ad837031a69381049b34")
-report = analyzer.get_detailed_report()
-print(report)
-summary_dict = analyzer.get_commit_summary_dict()
-print(summary_dict)
-time_difference_days = analyzer.get_time_between_commits_days()
-print(f"Time between commits: {time_difference_days} days")
-is_merge = analyzer.is_merge_commit()
-print(f"Is merge commit: {is_merge}")
+
