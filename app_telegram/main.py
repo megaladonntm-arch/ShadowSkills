@@ -18,7 +18,7 @@ from app.data_base.crud import crud_user
 from app.data_base.base import SessionLocal
 from app.schemas import user as schemas_user
 
-TOKEN = getenv("")
+TOKEN = getenv("BOT_TOKEN")
 
 dp = Dispatcher()
 
