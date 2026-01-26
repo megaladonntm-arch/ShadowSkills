@@ -71,10 +71,3 @@ class ApplicationAdmins(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     granted_at = Column(DateTime, default=datetime.utcnow)
-    #works that can dao admins
-    
-
-
-
-Base.metadata.create_all(bind=engine)
-#add fake data

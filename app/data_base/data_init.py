@@ -1,15 +1,18 @@
-from base import declarative_base, Column, Integer, String, Boolean, DateTime, ForeignKey ,SessionLocal, User, Repository, BannedUser, CommitMark, SkillScore, SkillMarketValue
+from base import declarative_base, Column, Integer, String, Boolean, DateTime, ForeignKey ,SessionLocal, User, Repository, BannedUser, CommitMark, SkillScore, SkillMarketValue, ApplicationAdmins
 from datetime import datetime
+
+def grant_admin(db, user_id):
+    admin = ApplicationAdmins(user_id=user_id)
+    db.add(admin)
+    db.commit()
 
 def init_db():
     db = SessionLocal()
     
-    # Проверяем, есть ли данные, чтобы не дублировать при перезапуске
     if db.query(User).first():
         db.close()
         return
 
-    # 1. Создаем пользователей
     user1 = User(
         username="shadow_coder",
         email="coder@shadowskills.com",
@@ -25,18 +28,16 @@ def init_db():
         is_active=False
     )
     db.add_all([user1, user2])
-    db.commit() # Коммитим, чтобы получить ID пользователей
+    db.commit()
 
-    # 2. Создаем репозиторий
     repo = Repository(
         name="ShadowSkills",
         owner="megaladonntm-arch",
         url="https://github.com/megaladonntm-arch/ShadowSkills"
     )
     db.add(repo)
-    db.commit() # Коммитим, чтобы получить ID репозитория
+    db.commit()
 
-    # 3. Добавляем связанные данные (используем ID созданных объектов)
     ban = BannedUser(user_id=user2.id, reason="Нарушение правил сообщества")
     mark = CommitMark(user_id=user1.id, commit_sha="a1b2c3d", mark=95)
     score = SkillScore(skill_name="Python", score=88, project_id=repo.id)
@@ -44,6 +45,8 @@ def init_db():
 
     db.add_all([ban, mark, score, market_val])
     
+    grant_admin(db, user1.id)
+
     db.commit()
     db.close()
 
