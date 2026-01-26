@@ -14,11 +14,11 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
 from sqlalchemy.orm import Session
 
-
+from app.data_base.crud import crud_user
 from app.data_base.base import SessionLocal
 from app.schemas import user as schemas_user
 
-TOKEN = getenv("BOT_TOKEN")
+TOKEN = getenv("8166681973:AAHppaLeE4NzXkIshtlj9WoTlVfLcQDMuYE")
 
 dp = Dispatcher()
 
