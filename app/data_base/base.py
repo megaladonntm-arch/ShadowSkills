@@ -65,6 +65,16 @@ class SkillMarketValue(Base):
     project_id = Column(Integer, ForeignKey("repositories.id"), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow)
+class ApplicationAdmins(Base):
+    __tablename__ = "application_admins"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    granted_at = Column(DateTime, default=datetime.utcnow)
+    #works that can dao admins
+    
 
 
-#Base.metadata.create_all(bind=engine)
+
+Base.metadata.create_all(bind=engine)
+#add fake data
