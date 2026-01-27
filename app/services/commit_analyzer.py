@@ -1,7 +1,6 @@
 
 from commit import CommitModel
 from skill_scorer import ScoreSkillsForProject
-from commit import AdminCommitmarkForUser
 
 from datetime import timedelta
 
@@ -14,9 +13,6 @@ class CommitAnalyzer:
         self.commit_model = CommitModel(repo_owner, repo_name, commit_sha)
 
     def analyze_commit(self):
-        """
-        Analyzes a specific commit in a GitHub repository and returns a dictionary containing information about the commit.
-        """
         commit_message = self.commit_model.get_commit_message()
         author_info = self.commit_model.get_author_info()
         commit_stats = self.commit_model.get_commit_stats()
