@@ -33,3 +33,4 @@ class ScoreSkillsForProject:
             "author": skill_data['author'],
             "market_value": market_value
         }
+    

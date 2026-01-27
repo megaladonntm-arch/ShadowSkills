@@ -7,9 +7,7 @@ from datetime import timedelta
 
 class CommitAnalyzer:
     def __init__(self, repo_owner: str, repo_name: str, commit_sha: str):
-        """
-        Initializes a CommitAnalyzer object with the specified repository owner, repository name, and commit SHA.
-        """
+       
         self.repo_owner = repo_owner
         self.repo_name = repo_name
         self.commit_sha = commit_sha

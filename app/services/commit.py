@@ -100,12 +100,6 @@ class CommitModel:
         return "Unknown"
 
     def get_tags_for_commit(self):
-        """
-        Returns a list of tags for the commit.
-        Note: The GitHub API does not provide a direct way to get tags for a commit.
-        This method is a placeholder and currently returns an empty list.
-        A full implementation would require fetching all tags and finding the match.
-        """
         return []
     
 
