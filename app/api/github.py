@@ -5,9 +5,6 @@ router = APIRouter()
 
 @router.get("/repo/{repo_owner}/{repo_name}/commit/{commit_sha}/analyze")
 def analyze_commit_endpoint(repo_owner: str, repo_name: str, commit_sha: str):
-    """
-    Analyzes a specific commit in a GitHub repository.
-    """
     try:
         analyzer = CommitAnalyzer(repo_owner=repo_owner, repo_name=repo_name, commit_sha=commit_sha)
         analysis = analyzer.analyze_commit()
