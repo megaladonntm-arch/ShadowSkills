@@ -1,0 +1,47 @@
+my_telegram_bot/
+├── bot/                        # Основной код бота
+│   ├── __init__.py
+│   ├── main.py                 # Точка входа (запуск бота)
+│   ├── config.py               # Настройки / переменные окружения
+│   ├── loader.py               # Инициализация бота, dispatcher, middlewares
+│   ├── handlers/               # Обработчики команд и событий
+│   │   ├── __init__.py
+│   │   ├── start.py
+│   │   ├── help.py
+│   │   ├── admin.py
+│   │   └── user.py
+│   ├── services/               # Бизнес‑логика (вне хэндлеров)
+│   │   ├── __init__.py
+│   │   ├── db_service.py
+│   │   └── ai_service.py
+│   ├── filters/                # Кастомные фильтры
+│   │   ├── __init__.py
+│   │   └── is_admin.py
+│   ├── keyboards/              # Клавиатуры / кнопки
+│   │   ├── __init__.py
+│   │   ├── inline.py
+│   │   └── reply.py
+│   ├── middlewares/            # Мидлвары (логгинг, локаль и др.)
+│   │   ├── __init__.py
+│   │   └── logging_middleware.py
+│   ├── models/                 # ORM / модели (SQLAlchemy/Pydantic)
+│   │   ├── __init__.py
+│   │   └── user.py
+│   └── utils/                  # Утилиты, хелперы
+│       ├── __init__.py
+│       └── helpers.py
+│
+├── data/                       # Данные
+│   ├── db.sqlite3              # Локальная БД
+│   └── migrations/             # Миграции
+│
+├── tests/                      # Тесты
+│   ├── __init__.py
+│   ├── test_handlers.py
+│   └── test_services.py
+│
+├── Dockerfile                  # Контейнеризация
+├── .env                        # Секреты и переменные окружения
+├── requirements.txt            # Зависимости
+├── README.md                   # Документация
+└── .gitignore

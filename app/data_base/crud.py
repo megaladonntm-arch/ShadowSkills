@@ -1,8 +1,12 @@
 #make crud
 from app.data_base import base as models
 from app.data_base.base import SessionLocal
-from app.schemas.user import UserCreate, UserUpdate
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session      
+from schemas.user import UserCreate, UserUpdate
+
+
+#here is prob with import i will try to fix it within 10 minutes
+
 
 def get_db():
     db = SessionLocal()
