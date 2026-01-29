@@ -1,22 +1,12 @@
-import os
 from openai import OpenAI
-from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
-from pydantic import BaseModel
 
-class CodeRequest(BaseModel):
-    prompt: str
 
-api_key = ""
-
-client = OpenAI(
-  base_url="https://openrouter.ai/api/v1",
-  api_key=api_key,
-)
-
-def analyze_code(request: CodeRequest):
+def analyze_code(code_to_analyze: str, api_key: str):
     try:
-        code_to_analyze = request.prompt
+        client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=api_key,
+        )
         analysis_prompt = f'''Please analyze the following code snippet. Based on your analysis, provide:
 1. A score on a scale of 1-10.
 2. A list of "minuses" or weaknesses in the code.
@@ -32,11 +22,11 @@ Here is the code:
         completion = client.chat.completions.create(
             extra_headers={
                 "HTTP-Referer": "http://localhost",
-                "X-Title": "Code-Analyzer-FastAPI",
+                "X-Title": "Code-Analyzer-MGD",
             },
-            model="tngtech/deepseek-r1t2-chimera:free",#fuck it kust left it as well
+            model="tngtech/deepseek-r1t2-chimera:free",
             messages=[
-                 {
+                {
                     "role": "system",
                     "content": "You are an expert code reviewer providing feedback on code quality."
                 },
@@ -50,5 +40,3 @@ Here is the code:
         return {"response": response_content}
     except Exception as e:
         return {"error": str(e)}
-
-
