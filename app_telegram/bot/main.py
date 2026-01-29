@@ -9,7 +9,7 @@ from aiogram.types import Message
 from aiogram.utils.markdown import hbold
 
 import sys
-from os
+import os
 project_root = Path(__file__).resolve().parents[3]
 sys.path.append(str(project_root))
 from services.ai_service import get_code_analysis
