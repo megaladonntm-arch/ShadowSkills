@@ -14,9 +14,11 @@ from aiogram.utils.markdown import hbold
 project_root = Path(__file__).resolve().parents[3]
 sys.path.append(str(project_root))
 from services.ai_service import get_code_analysis
+from app_telegram.bot.config import ADMIN_ID, BOT_TOKEN
+
 
 # Получаем токен из переменной окружения
-TOKEN = getenv("BOT_TOKEN", "7994656906:AAF8RwxbZj6_iMv0KfQN-UwdTgBgin15Hog")
+
 
 # Создаем диспетчер
 dp = Dispatcher()
@@ -52,7 +54,6 @@ async def help_handler(message: Message) -> None:
 
 @dp.message(Command("analyze"))
 async def analyze_command_handler(message: Message) -> None:
-    """Обработчик команды /analyze"""
     await message.answer(
         f"{hbold('🔍 Режим анализа кода активирован!')}\n\n"
         f"Отправьте мне Python код, и я проанализирую его для вас."
@@ -60,7 +61,6 @@ async def analyze_command_handler(message: Message) -> None:
 
 
 async def send_typing_action(bot: Bot, chat_id: int, duration: int = 30):
-    """Отправляет действие 'печатает' на указанное время"""
     try:
         for _ in range(duration):
             await bot.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
@@ -71,7 +71,6 @@ async def send_typing_action(bot: Bot, chat_id: int, duration: int = 30):
 
 @dp.message()
 async def code_analysis_handler(message: Message) -> None:
-    """Обработчик всех остальных сообщений - анализ кода"""
     try:
         # Проверяем, что сообщение содержит текст
         if not message.text:
@@ -93,13 +92,12 @@ async def code_analysis_handler(message: Message) -> None:
             # Останавливаем индикатор "печатает"
             typing_task.cancel()
             
-            # Проверяем длину сообщения (лимит Telegram ~4096 символов)
             max_length = 4000
             
             if len(str(ai_result)) > max_length:
                 # Разбиваем на несколько сообщений
                 result_str = str(ai_result)
-                chunks = []
+                chunks = []#alghortims for doin well 
                 current_chunk = ""
                 
                 for line in result_str.split('\n'):
@@ -112,7 +110,6 @@ async def code_analysis_handler(message: Message) -> None:
                 if current_chunk:
                     chunks.append(current_chunk)
                 
-                # Отправляем каждую часть
                 for i, chunk in enumerate(chunks, 1):
                     await message.answer(
                         f"📄 Часть {i}/{len(chunks)}:\n\n{chunk}",
@@ -138,10 +135,8 @@ async def code_analysis_handler(message: Message) -> None:
 
 
 async def main() -> None:
-    """Главная функция запуска бота"""
-    # Инициализируем бот
     bot = Bot(
-        token=TOKEN,
+        token=BOT_TOKEN,
         default=DefaultBotProperties(parse_mode=ParseMode.HTML)
     )
     
@@ -157,7 +152,6 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    # Настраиваем логирование
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',

@@ -11,19 +11,3 @@ from services.ai_service import get_code_analysis
 from app_telegram.bot.loader import dp
 
 
-async def command_start_handler(message: Message) -> None:
-
-    await message.answer(f"Hello, {html.bold(message.from_user.full_name)}! "
-                         f"I'm a code analyzer bot. "
-                         f"Send me a Python code snippet to analyze.")
-
-async def command_help_handler(message: Message) -> None:
-    await message.answer("Send me a Python code snippet and I will analyze it for you.")
-
-async def analyze_code(prompt: Message) -> None:
-    ai_resl = get_code_analysis(prompt.text)
-    await prompt.answer(ai_resl)
-
-   
-
-
