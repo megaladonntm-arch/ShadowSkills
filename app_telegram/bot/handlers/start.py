@@ -4,11 +4,12 @@ from aiogram.types import Message
 #PATHS
 import sys
 from pathlib import Path
+project_root = Path(__file__).resolve().parents[3]
+sys.path.append(str(project_root))
+from services.ai_service import get_code_analysis
 # =Boots
 from app_telegram.bot.loader import dp
 
-project_root = Path(__file__).resolve().parents[3]
-sys.path.append(str(project_root))
 
 async def command_start_handler(message: Message) -> None:
 
@@ -20,6 +21,9 @@ async def command_help_handler(message: Message) -> None:
     await message.answer("Send me a Python code snippet and I will analyze it for you.")
 
 async def analyze_code(prompt: Message) -> None:
-    await prompt.answer("Analyzing code...")
+    ai_resl = get_code_analysis(prompt.text)
+    await prompt.answer(ai_resl)
+
+   
 
 
