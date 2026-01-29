@@ -1,0 +1,1 @@
+#INIT here a project and pack it into real app_bot
