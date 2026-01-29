@@ -160,3 +160,5 @@ if __name__ == "__main__":
     
     # Запускаем бота
     asyncio.run(main())
+
+#yesterda i wll take architecture and make this prj fuully obtained with architecture
