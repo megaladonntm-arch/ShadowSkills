@@ -2,6 +2,11 @@ from sqlalchemy.orm import Session
 from app.data_base import base as models
 from app.schemas import user as schemas
 from app.core.security import get_password_hash
+import sys
+import os
+from pathlib import Path
+project_root = Path(__file__).resolve().parents[3]
+sys.path.append(str(project_root))
 
 def get_user_by_username(db: Session, username: str):
     return db.query(models.User).filter(models.User.username == username).first()

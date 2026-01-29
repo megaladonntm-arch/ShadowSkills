@@ -1,4 +1,9 @@
 #make crud
+import sys
+import os
+from pathlib import Path
+project_root = Path(__file__).resolve().parents[3]
+sys.path.append(str(project_root))
 from app.data_base import base as models
 from app.data_base.base import SessionLocal
 from sqlalchemy.orm import Session      

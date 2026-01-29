@@ -1,7 +1,5 @@
 import asyncio
 import logging
-import sys
-from os import getenv
 from pathlib import Path
 from aiogram import Bot, Dispatcher, html
 from aiogram.client.default import DefaultBotProperties
@@ -10,7 +8,8 @@ from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 from aiogram.utils.markdown import hbold
 
-# Добавляем путь к проекту
+import sys
+from os
 project_root = Path(__file__).resolve().parents[3]
 sys.path.append(str(project_root))
 from services.ai_service import get_code_analysis
