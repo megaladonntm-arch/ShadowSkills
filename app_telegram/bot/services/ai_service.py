@@ -9,5 +9,5 @@ from Openrouter.src.Service.ai_code_analyzer import analyze_code
 from app_telegram.bot.config import OPENROUTER_API_KEY
 
 
-async def get_code_analysis(code: str):
+def get_code_analysis(code: str):
     return analyze_code(code_to_analyze=code, api_key=OPENROUTER_API_KEY)

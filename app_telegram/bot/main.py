@@ -2,66 +2,167 @@ import asyncio
 import logging
 import sys
 from os import getenv
-
+from pathlib import Path
 from aiogram import Bot, Dispatcher, html
 from aiogram.client.default import DefaultBotProperties
-from aiogram.enums import ParseMode
-from aiogram.filters import CommandStart,Command
+from aiogram.enums import ParseMode, ChatAction
+from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
-import sys
-from pathlib import Path
+from aiogram.utils.markdown import hbold
+
+# Добавляем путь к проекту
 project_root = Path(__file__).resolve().parents[3]
 sys.path.append(str(project_root))
 from services.ai_service import get_code_analysis
 
+# Получаем токен из переменной окружения
+TOKEN = getenv("BOT_TOKEN", "7994656906:AAF8RwxbZj6_iMv0KfQN-UwdTgBgin15Hog")
 
-# Bot token can be obtained via https://t.me/BotFather
-TOKEN = "7994656906:AAF8RwxbZj6_iMv0KfQN-UwdTgBgin15Hog"
-
-# All handlers should be attached to the Router (or Dispatcher)
-
+# Создаем диспетчер
 dp = Dispatcher()
 
 
 @dp.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
-    """
-    This handler receives messages with `/start` command
-    """
-    # Most event objects have aliases for API methods that can be called in events' context
-    # For example if you want to answer to incoming message you can use `message.answer(...)` alias
-    # and the target chat will be passed to :ref:`aiogram.methods.send_message.SendMessage`
-    # method automatically or call API method directly via
-    # Bot instance: `bot.send_message(chat_id=message.chat.id, ...)`
-    await message.answer(f"Hello, {html.bold(message.from_user.full_name)}!")
+    """Обработчик команды /start"""
+    await message.answer(
+        f"👋 Привет, {hbold(message.from_user.full_name)}!\n\n"
+        f"Я бот для анализа Python кода.\n"
+        f"Отправь мне код, и я его проанализирую!\n\n"
+        f"Команды:\n"
+        f"/start - Начать работу\n"
+        f"/analyze - Режим анализа кода\n"
+        f"/help - Помощь"
+    )
 
 
-@dp.message()
-async def echo_handler(message: Message) -> None:
-    try:
-        # Send a copy of the received message
-        await message.send_copy(chat_id=message.chat.id)
-    except TypeError:
-        # But not all the types is supported to be copied so need to handle it
-        await message.answer("Nice try!")
+@dp.message(Command("help"))
+async def help_handler(message: Message) -> None:
+    """Обработчик команды /help"""
+    await message.answer(
+        f"{hbold('📚 Как использовать бот:')}\n\n"
+        f"1. Просто отправь мне Python код\n"
+        f"2. Я проанализирую его и дам рекомендации\n\n"
+        f"Команды:\n"
+        f"/start - Начать работу\n"
+        f"/analyze - Активировать режим анализа\n"
+        f"/help - Показать эту справку"
+    )
+
+
 @dp.message(Command("analyze"))
-async def analyze_code(message: Message) -> None:
-    await message.answer("Send me a Python code snippet and I will analyze it for you.")
+async def analyze_command_handler(message: Message) -> None:
+    """Обработчик команды /analyze"""
+    await message.answer(
+        f"{hbold('🔍 Режим анализа кода активирован!')}\n\n"
+        f"Отправьте мне Python код, и я проанализирую его для вас."
+    )
+
+
+async def send_typing_action(bot: Bot, chat_id: int, duration: int = 30):
+    """Отправляет действие 'печатает' на указанное время"""
+    try:
+        for _ in range(duration):
+            await bot.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
+            await asyncio.sleep(5)
+    except:
+        pass
+
 
 @dp.message()
-async def analyze_code(message: Message) -> None:
-    ai_resl = get_code_analysis(message.text)
-    await message.answer(ai_resl)
+async def code_analysis_handler(message: Message) -> None:
+    """Обработчик всех остальных сообщений - анализ кода"""
+    try:
+        # Проверяем, что сообщение содержит текст
+        if not message.text:
+            await message.answer("❌ Пожалуйста, отправьте текстовое сообщение с кодом.")
+            return
+        
+        # Получаем бот из контекста
+        bot = message.bot
+        
+        # Запускаем индикатор "печатает" в фоне
+        typing_task = asyncio.create_task(
+            send_typing_action(bot, message.chat.id)
+        )
+        
+        try:
+            # Получаем анализ от AI
+            ai_result = get_code_analysis(message.text)
+            
+            # Останавливаем индикатор "печатает"
+            typing_task.cancel()
+            
+            # Проверяем длину сообщения (лимит Telegram ~4096 символов)
+            max_length = 4000
+            
+            if len(str(ai_result)) > max_length:
+                # Разбиваем на несколько сообщений
+                result_str = str(ai_result)
+                chunks = []
+                current_chunk = ""
+                
+                for line in result_str.split('\n'):
+                    if len(current_chunk) + len(line) + 1 > max_length:
+                        chunks.append(current_chunk)
+                        current_chunk = line
+                    else:
+                        current_chunk += line + '\n'
+                
+                if current_chunk:
+                    chunks.append(current_chunk)
+                
+                # Отправляем каждую часть
+                for i, chunk in enumerate(chunks, 1):
+                    await message.answer(
+                        f"📄 Часть {i}/{len(chunks)}:\n\n{chunk}",
+                        parse_mode=None
+                    )
+            else:
+                # Отправляем одним сообщением
+                await message.answer(
+                    f"✅ Результат анализа:\n\n{ai_result}",
+                    parse_mode=None
+                )
+        
+        except asyncio.CancelledError:
+            typing_task.cancel()
+            raise
+        
+    except Exception as e:
+        logging.error(f"Ошибка при анализе кода: {e}", exc_info=True)
+        await message.answer(
+            "❌ Произошла ошибка при анализе кода.\n"
+            "Попробуйте еще раз или отправьте другой код."
+        )
 
-@dp.message()
+
 async def main() -> None:
-    # Initialize Bot instance with default bot properties which will be passed to all API calls
-    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-
-    # And the run events dispatching
-    await dp.start_polling(bot)
+    """Главная функция запуска бота"""
+    # Инициализируем бот
+    bot = Bot(
+        token=TOKEN,
+        default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+    )
+    
+    try:
+        # Удаляем старые webhook (если есть)
+        await bot.delete_webhook(drop_pending_updates=True)
+        
+        # Запускаем polling
+        logging.info("🚀 Бот запущен!")
+        await dp.start_polling(bot)
+    finally:
+        await bot.session.close()
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+    # Настраиваем логирование
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        stream=sys.stdout
+    )
+    
+    # Запускаем бота
     asyncio.run(main())
