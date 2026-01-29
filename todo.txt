@@ -1,3 +1,3 @@
 make fully completedd working app folder without problems with
 just for today adding some basic implem for openrouter for using ai in temps to check and mark codes
-
+made basic supkmety of coding and structured bots
