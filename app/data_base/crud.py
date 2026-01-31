@@ -2,7 +2,7 @@
 import sys
 import os
 from pathlib import Path
-project_root = Path(__file__).resolve().parents[3]
+project_root = Path(__file__).resolve().parents[2]
 sys.path.append(str(project_root))
 from app.data_base import base as models
 from app.data_base.base import SessionLocal
@@ -34,6 +34,7 @@ def create_user(db: Session, user: UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
 def update_user(db: Session, user_id: int, user_update: UserUpdate):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
     if not db_user:

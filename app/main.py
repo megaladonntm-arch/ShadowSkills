@@ -1,8 +1,6 @@
 import sys
 import os
-from pathlib import Path
-project_root = Path(__file__).resolve().parents[3]
-sys.path.append(str(project_root))
+
 
 from data_base.crud import create_user, get_user_by_email, get_user_by_username, update_user, delete_user, get_all_users, get_user, get_active_users, deactivate_user, activate_user, get_user_count, get_users_by_full_name, get_users_by_email, get_users_by_username, ban_user, unban_user
 from data_base.base import SessionLocal
@@ -21,7 +19,6 @@ def init_db():
     db_gen = get_db()
     db: Session = next(db_gen)
     try:
-        # Example initialization logic
         if not get_user_by_username(db, "admin"):
             admin_user = UserCreate(
                 username="admin",
