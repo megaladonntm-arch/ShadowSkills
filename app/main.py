@@ -39,6 +39,12 @@ def init_db():
                 full_name="Test User",
                 password="testpassword"
             ),
+            UserCreate(
+                username="anotheruser",
+                email="another@example.com",
+                full_name="Another User",
+                password="anotherpassword"
+            ),
         ]
 
         for user in users:
