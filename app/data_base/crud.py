@@ -1,4 +1,5 @@
 #make crud
+#imps 
 import sys
 import os
 from pathlib import Path
@@ -28,7 +29,8 @@ def create_user(db: Session, user: UserCreate):
         username=user.username,
         email=user.email,
         full_name=user.full_name,
-        hashed_password=user.hashed_password,
+        password = user.password,
+        is_active=True
     )
     db.add(db_user)
     db.commit()

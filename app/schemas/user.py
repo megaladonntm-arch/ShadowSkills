@@ -19,7 +19,6 @@ class UserBase(BaseModel):
     email: EmailStr
     full_name: str = Field(max_length=20)
     is_active: bool = True
-    hashed_password: Password
 
 
 class UserCreate(UserBase):

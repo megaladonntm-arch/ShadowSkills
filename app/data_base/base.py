@@ -19,8 +19,8 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     full_name = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
-    hashed_password = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+    password = Column(String, nullable=False)
 class Repository(Base):
     __tablename__ = "repositories"
 
