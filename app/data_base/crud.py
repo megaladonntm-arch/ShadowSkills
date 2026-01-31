@@ -113,3 +113,9 @@ def is_user_banned(db: Session, user_id: int):
     return db.query(models.BannedUser).filter(models.BannedUser.user_id == user_id).first() is not None
 def get_all_banned_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.BannedUser).offset(skip).limit(limit).all()
+
+
+
+
+#repository cruds
+

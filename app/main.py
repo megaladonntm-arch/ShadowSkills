@@ -5,6 +5,9 @@ import os
 from data_base.crud import create_user, get_user_by_email, get_user_by_username, update_user, delete_user, get_all_users, get_user, get_active_users, deactivate_user, activate_user, get_user_count, get_users_by_full_name, get_users_by_email, get_users_by_username, ban_user, unban_user
 from data_base.base import SessionLocal
 
+from services.commit_analyzer import CommitAnalyzer, SkillMarketValueAnalyzer
+from services.commit import CommitModel
+
 
 from schemas.user import UserCreate, UserUpdate
 from sqlalchemy.orm import Session
@@ -53,7 +56,20 @@ def init_db():
 
     finally:
         db.close()
+def main():
+    init_db()
+if __name__ == "__main__":
+    #analyze repo
+    
+    main()
+    print("Done")
+    #analyze repo
+    #analyze commit
+    #analyze commit
 
-def say_hello():
-    return "Hello from crud.py"
-init_db()
+    commit_analyer = CommitAnalyzer("megaladonntm-arch", "ShadowSkills", "d0e7d528d11e5270da48ad837031a69381049b34")
+    report = commit_analyer.analyze_commit()
+    print(report)
+    #commi
+    
+    print(report)
