@@ -24,7 +24,8 @@ def init_db():
                 username="admin",
                 email="f7TlI@example.com",
                 full_name="Admin User",
-                hashed_password="adminpassword"
+                hashed_password="adminpassword",
+                password="aasdasad"
             )
             create_user(db, admin_user)
     finally:
