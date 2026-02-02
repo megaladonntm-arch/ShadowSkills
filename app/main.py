@@ -1,16 +1,12 @@
-import sys
-import os
-
-
-from data_base.crud import create_user, get_user_by_email, get_user_by_username, update_user, delete_user, get_all_users, get_user, get_active_users, deactivate_user, activate_user, get_user_count, get_users_by_full_name, get_users_by_email, get_users_by_username, ban_user, unban_user
 from data_base.base import SessionLocal
+from data_base.crud import (
+    create_user,
+    get_user_by_username,
+)
 
-from services.commit_analyzer import CommitAnalyzer, SkillMarketValueAnalyzer
-from services.commit import CommitModel
+from schemas.user import UserCreate
 
-
-from schemas.user import UserCreate, UserUpdate
-from sqlalchemy.orm import Session
+from services.commit_analyzer import CommitAnalyzer
 
 
 def get_db():
@@ -20,56 +16,59 @@ def get_db():
     finally:
         db.close()
 
+
 def init_db():
     db = SessionLocal()
     try:
-        users = [
+        users = (
             UserCreate(
                 username="admin",
                 email="f7TlI@example.com",
                 full_name="Admin User",
-                password="aasdasad"
+                password="aasdasad",
             ),
             UserCreate(
                 username="Ubaydullin",
                 email="Ubaydullin@bk.ru",
                 full_name="Ubaydullin",
-                password="aasdasad"
+                password="aasdasad",
             ),
             UserCreate(
                 username="testuser",
                 email="test@mail.com",
                 full_name="Test User",
-                password="testpassword"
+                password="testpassword",
             ),
             UserCreate(
                 username="anotheruser",
                 email="another@example.com",
                 full_name="Another User",
-                password="anotherpassword"
+                password="anotherpassword",
             ),
-        ]
+        )
 
         for user in users:
             if not get_user_by_username(db, user.username):
                 create_user(db, user)
-
     finally:
         db.close()
+
+
+def analyze_commit():
+    analyzer = CommitAnalyzer(
+        repo_owner="megaladonntm-arch",
+        repo_name="ShadowSkills",
+        commit_hash="d0e7d528d11e5270da48ad837031a69381049b34",
+    )
+    return analyzer.analyze_commit()
+
+
 def main():
     init_db()
-if __name__ == "__main__":
-    #analyze repo
-    
-    main()
+    report = analyze_commit()
     print("Done")
-    #analyze repo
-    #analyze commit
-    #analyze commit
+    print(report)
 
-    commit_analyer = CommitAnalyzer("megaladonntm-arch", "ShadowSkills", "d0e7d528d11e5270da48ad837031a69381049b34")
-    report = commit_analyer.analyze_commit()
-    print(report)
-    #commi
-    
-    print(report)
+
+if __name__ == "__main__":
+    main()
